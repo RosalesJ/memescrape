@@ -2,13 +2,28 @@ import praw
 import urllib
 import uuid
 import re
-working_dir = '/Users/coby/Projects/memescrape/temp/'
+import os
+import time
+working_dir = os.getcwd() + '/temp/'
+applescript = "osascript -e 'tell application \"System Events\"\nstart current screen saver\nend tell'"
 creds = open("creds.csv",'r').read().split(",")
 reddit = praw.Reddit(client_id=creds[0],
                      client_secret=creds[1],
                      username=creds[2],
                      password=creds[3],
                      user_agent="memescrape")
-for post in [x.url for x in reddit.subreddit('me_irl').top('hour') if x.url.endswith('.jpg') or x.url.endswith('.png')]:
-	print('Downloading: %s...'%(post))
-	urllib.request.urlretrieve(post,working_dir+post.split('/')[len(post.split('/'))-1])
+try:
+	while True:
+		print("Refreshing le memes")
+		for post in [x.url for x in reddit.subreddit('me_irl').top("day") if x.url.endswith(('.jpg','png'))]:
+			print('Downloading: %s...'%(post))
+			try:
+				urllib.request.urlretrieve(post,working_dir+post.split('/')[-1])
+			except urllib.error.HTTPError as e:
+				print("Error")
+		os.system(applescript)
+		time.sleep(3600)
+		os.system("rm " + working_dir + "*")
+		print("Refreshing...")
+except KeyboardInterrupt as e:
+	print("\nExiting")
