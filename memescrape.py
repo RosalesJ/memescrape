@@ -20,6 +20,7 @@ try:
 				urllib.request.urlretrieve(post,working_dir+post.split('/')[-1])
 			except urllib.error.HTTPError as e:
 				print("Error")
+		print("Done")
 		time.sleep(3600)
 		os.system("rm " + working_dir + "*")
 		print("Refreshing...")
