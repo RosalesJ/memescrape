@@ -6,6 +6,7 @@ import os
 import time
 working_dir = os.getcwd() + '/temp/'
 creds = open("creds.csv",'r').read().split(",")
+subreddits = ['me_irl','meirl','surrealmemes','deepfriedmemes']
 reddit = praw.Reddit(client_id=creds[0],
                      client_secret=creds[1],
                      username=creds[2],
@@ -14,7 +15,7 @@ reddit = praw.Reddit(client_id=creds[0],
 try:
 	while True:
 		print("Refreshing le memes")
-		for post in [x.url for x in reddit.subreddit('me_irl').top("day") if x.url.endswith(('.jpg','png'))]:
+		for post in [x.url for x in reddit.subreddit('+'.join(subreddits)).top("day") if x.url.endswith(('.jpg','png'))]:
 			print('Downloading: %s...'%(post))
 			try:
 				urllib.request.urlretrieve(post,working_dir+post.split('/')[-1])
